@@ -850,7 +850,7 @@ const mailOption = {
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                        <td class="esd-block-button es-p10t es-p20b" align="center"><span class="es-button-border" style="border-width: 0px; border-style: solid; background: none 0% 0% repeat scroll #26a4d3; border-color: #26a4d3;"><a href=${url} class="es-button" target="_blank" style="background: #26a4d3 none repeat scroll 0% 0%; border-color: #26a4d3;">FINALISER L'INSCRIPTION</a></span></td>
+                                                                                        <td class="esd-block-button es-p10t es-p20b" align="center"><span class="es-button-border" style="border-width: 0px; border-style: solid; background: none 0% 0% repeat scroll #26a4d3; border-color: #26a4d3;"><a href=${url} class="es-button" target="_blank" style="background: #26a4d3 none repeat scroll 0% 0%; border-color: #26a4d3;">${txt}</a></span></td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
@@ -882,7 +882,7 @@ const mailOption = {
                                                                                 <tbody>
                                                                                     <tr>
                                                                                         <td class="esd-block-text es-p5t es-p15b es-m-txt-c" align="left">
-                                                                                            <h2> ${txt}</h2>
+                                                                                            <h2>WORK ET YAMO C'EST QUOI ?</h2>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>

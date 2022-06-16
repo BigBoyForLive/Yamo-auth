@@ -31,7 +31,7 @@ const userCtrl = {
             const activation_token = createActivationToken(newUser)
             const url = `${CLIENT_URL}/user/activate/${activation_token}`
              
-            sendMail(email, url)
+            sendMail(email, url, "FINALISER L'INSCRIPTION")
             
             
 
@@ -68,7 +68,8 @@ const userCtrl = {
       catch (err) {
         return res.status(500).json({msg : err.message})
       }
-    }, login: async (req, res) => {
+    }, 
+    login: async (req, res) => {
       try{
       const {email, password} = req.body
       const user = await Users.findOne({email})
@@ -121,12 +122,52 @@ const userCtrl = {
     const access_token = createAccessToken({id: user._id})
     const url = `${CLIENT_URL}/user/reset/${access_token}`
 
-    sendEmail(email, url, "FINALISER L'INSCRIPTION")
+    sendMail(email, url, "CHANGER LE MOT DE PASSE")
     res.json({msg: "veuillez verifier votre boite mail pour changer votre mot de passe"})
       } catch (err) {
         return res.status(500).json({msg: err.message})
       }
+    }, 
+    resetPassword: async (req, res) => {
+      try {
+        const {password} = req.body
+        console.log(password)
+        const passwordHash = await bcrypt.hash(password, 12)
+
+        res.json({msg: "le mot de passe a été reinitialiser avec succès"})
+
+        console.log(req.user)
+
+        await Users.findOneAndUpdate({_id: req.user.id}, {
+          password: passwordHash
+        })
+
+
+
+      } catch (err) {
+        return res.status(500).json({msg: err.message})
+      }
+    },
+    getUserInfor : async (req, res) => {
+      try {
+        const user = await Users.findById(req.user.id).select('-password')
+
+        res.json(user)
+
+      } catch (err) {
+        return res.status(500).json({msg: err.message})
+        
+      }
+    },
+    getUsersAllInfor: async (req, res) => {
+      try {
+        console.log(req.user)
+    
+      } catch (err) {
+        return res.status(500).json({msg: err.message})
+      }
     }
+
     }
 
 
