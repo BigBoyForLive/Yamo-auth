@@ -45,8 +45,90 @@ const userCtrl = {
         } catch (err) {
             return res.status(500).json({msg : err.message})
         }
+    },
+    activateEmail: async (req, res) => {
+      try {
+        const {activation_token} = req.body
+        const user = jwt.verify(activation_token, process.env.ACTIVATION_TOKEN_SECRET )
+
+
+        console.log(user)
+        const{name, email, password} = user
+        const check = await Users.findOne({email})
+        if(check) return res.status(400).json({msg: "cet email existe deja "})
+
+        const newUser = new Users({
+          name, email, password
+        })
+
+        await newUser.save()
+
+        res.json({msg: "Le compte à bien été activé"})
+      }
+      catch (err) {
+        return res.status(500).json({msg : err.message})
+      }
+    }, login: async (req, res) => {
+      try{
+      const {email, password} = req.body
+      const user = await Users.findOne({email})
+
+      if(!user) return res.status(400).json({msg : "cet email n'existe pas  "})
+    
+
+      const isMatch = await bcrypt.compare(password, user.password)
+      if(!isMatch) return res.status(400).json({msg : "le mot de passe entrer est incorrect "})
+
+      const refresh_token = createRefreshToken({id: user._id})
+      res.cookie('refreshtoken', refresh_token, {
+        httpOnly : true,
+        path: 'user/refresh_token',
+        maxAge: 7*24*60*60*1000 // valable 7jours
+      })
+
+
+      res.json({msg: "connexion reussie"})
+
+      } catch (err) {
+        
+        return res.status(500).json({msg : err.message})
+      }
+    },
+
+    getAccessToken: (req, res) => {
+       
+        try {
+        const rf_token = req.cookies.refreshtoken
+        if(!rf_token)res.status(400).json({msg: "veuillez vous connecter"})
+       
+        jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+          if(err) res.status(400).json({msg: "veuillez vous connecter"})
+
+          const access_token =  createAccessToken({id: user.id})
+          res.json({access_token})
+          
+        })
+        }catch (err) {
+          return res.status(500).json({msg: err.message})
+        }
+    },
+    forgotPassword : async (req, res) => {
+      try{
+    const {email} = req.body
+    const user = await Users.findOne({email})
+    if(!user) return res.status(400).json({msg: "cet email email est invalide"})
+
+    const access_token = createAccessToken({id: user._id})
+    const url = `${CLIENT_URL}/user/reset/${access_token}`
+
+    sendEmail(email, url, "FINALISER L'INSCRIPTION")
+    res.json({msg: "veuillez verifier votre boite mail pour changer votre mot de passe"})
+      } catch (err) {
+        return res.status(500).json({msg: err.message})
+      }
     }
-}
+    }
+
 
 
 const validateEmail = (email) => {

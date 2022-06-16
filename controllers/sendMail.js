@@ -7,7 +7,8 @@ const {
     MAILING_SERVICE_CLIENT_ID,
     MAILING_SERVICE_CLIENT_SECRET,
     MAILING_SERVICE_REFRESH_TOKEN,
-    SENDER_EMAIL_ADRESS
+    SENDER_EMAIL_ADRESS,
+    CLIENT_URL
 } = process.env
 
 const oauth2Client = new OAuth2(
@@ -19,7 +20,7 @@ const oauth2Client = new OAuth2(
 
 //  envoi de l'email 
 
-const sendEmail = (to, url) => {
+const sendEmail = (to, url, txt) => {
     oauth2Client.setCredentials({
         refresh_token : MAILING_SERVICE_REFRESH_TOKEN
     })
@@ -32,6 +33,7 @@ const sendEmail = (to, url) => {
             clientId: MAILING_SERVICE_CLIENT_ID,
             clientSecret : MAILING_SERVICE_CLIENT_SECRET,
             refreshToken: MAILING_SERVICE_REFRESH_TOKEN,
+            clientUrl:  CLIENT_URL,
             accessToken
         }
 
@@ -880,7 +882,7 @@ const mailOption = {
                                                                                 <tbody>
                                                                                     <tr>
                                                                                         <td class="esd-block-text es-p5t es-p15b es-m-txt-c" align="left">
-                                                                                            <h2>VEUILLEZ FINALISER L'INSCRIPTION</h2>
+                                                                                            <h2> ${txt}</h2>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
