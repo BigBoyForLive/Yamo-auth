@@ -161,14 +161,62 @@ const userCtrl = {
     },
     getUsersAllInfor: async (req, res) => {
       try {
-        console.log(req.user)
+        
+        const users = await Users.find().select('-password')
+        res.json(users)
     
+      } catch (err) {
+        return res.status(500).json({msg: err.message})
+      }
+    },
+    logout : async (req, res) => {
+      try {
+        res.clearCookie('refreshtoken', {path : 'user/refresh_token'})
+
+        return res.json({msg: "deconnexion reussie" })
+        
+      } catch (err) {
+        return res.status(500).json({msg: err.message})
+      }
+    }, 
+    updateUser: async (req, res) => {
+      try {
+        const {name, avatar} = req.body
+        await Users.findByIdAndUpdate({_id: req.user.id}, {
+          name , avatar
+        })
+        
+        res.json ({msg: "modifier avec succès"})
+
+      } catch (err) {
+        return res.status(500).json({msg: err.message})
+      }
+    },
+    updateUsersRole : async (req, res) => {
+      try {
+        const {role} = req.body
+        await Users.findByIdAndUpdate({_id: req.params.user.id}, {
+          role 
+        })
+        
+        res.json ({msg: "modifier avec succès"})
+
+      } catch (err) {
+        return res.status(500).json({msg: err.message})
+      }
+    },
+    deleteUser : async (req, res) => {
+      try {
+        await Users.findByIdAndDelete(req.params.id)
+        
+        res.json ({msg: "Compte supprimé avec succès"})
+
       } catch (err) {
         return res.status(500).json({msg: err.message})
       }
     }
 
-    }
+  }
 
 
 

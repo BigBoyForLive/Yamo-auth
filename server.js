@@ -14,7 +14,10 @@ app.use(fileUpload({
 }))
 
 // routes => /user/register
+
 app.use('/user', require('./routes/userRouter'))
+
+app.use('/api', require('./routes/upload'))
 
 // connect to mongodb
 const URI = process.env.MONGODB_URL 
