@@ -19,6 +19,7 @@ const oauth2Client = new OAuth2(
 )
 
 //  envoi de l'email 
+// contenant le corp du message et l'url dynamique
 
 const sendEmail = (to, url, txt) => {
     oauth2Client.setCredentials({
@@ -38,6 +39,7 @@ const sendEmail = (to, url, txt) => {
         }
 
     })
+    // entete de l'email et corps 
 const mailOption = {
     from : SENDER_EMAIL_ADRESS,
     to: to,
@@ -832,7 +834,7 @@ const mailOption = {
                                             <table class="es-content-body" style="background-color: #333333;" width="600" cellspacing="0" cellpadding="0" bgcolor="#333333" align="center">
                                                 <tbody>
                                                     <tr>
-                                                        <td class="esd-structure esd-checked es-p40t es-p40b es-p40r es-p40l" style="background-image: url('https://res.cloudinary.com/it-engineering-factory/image/upload/v1655317854/mes%20outils/bien_xloo75.jpg'); background-repeat: no-repeat;" align="left">
+                                                        <td class="esd-structure esd-checked es-p40t es-p40b es-p40r es-p40l" style="background-image: url('https://res.cloudinary.com/it-engineering-factory/image/upload/w_1000,ar_16:9,c_fill,g_auto,e_sharpen/v1655317854/mes%20outils/bien_xloo75.jpg'); background-repeat: no-repeat;" align="left">
                                                             <table width="100%" cellspacing="0" cellpadding="0">
                                                                 <tbody>
                                                                     <tr>
