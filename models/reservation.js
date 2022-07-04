@@ -1,40 +1,37 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const post = require('./post')
 
-const reservationSchema = new mongoose.Schema({
-    nom : {
-        type: String,
-        require : true ,
-        trim: true
+const reservationModel = new mongoose.Schema({
+    // Date.toString('yyyy-MM-dd') Date.now('yyyy-MM-dd')
+    // {$concat:[ {$substr:["$d", 0, 4]}, "-", {$substr:["$d", 4, 2]}, "-", {$substr:["$d", 6, 2]} ]}
+   
+
+    dateDebut : {
+        type: Date,
+        default : Date.now('dd-yyyy-MM')
     },
-
-    jour: {
-        type: String,
-        require : true ,
-        trim: true
-    }, 
-
-    type : {
-        type: Number,
-        require : true,
-        default : 0 // 0 = poste temporare ; 1= poste permanent 
-
-    },
+utilisateur : {
+       type: mongoose.Schema.Types.ObjectId,
+      ref: 'Users',
+      required : true
+},
 
     abonnement : {
-        type: Number,
-        require : true,
-        default : 0 // 0 = journalier ; 1= hebdomadaire; 2 = mensuel 
-
-    }, 
-    
-    statut : {
         type : Number,
-        require: true,
-        trim: true  // etudiant , élève , enseignant , 
+        default: 0
+    },
+    poste : {
+        type : String,
+        default : post
+    },
+     dateFin : {
+        type: Date,
+        default : Date({$toDate: "yyyy-MM-dd"})
     }
-},
-{
-        timestamps: true
-    })
+    
+} , {
+    timestamps : true
+})
 
-    module.exports = ("reservation", reservationSchema)
+
+module.exports = mongoose.model('Reservations', reservationModel)

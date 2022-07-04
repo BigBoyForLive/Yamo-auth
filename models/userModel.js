@@ -13,6 +13,11 @@ const userSchema = new mongoose.Schema({
       trim: true,
       unique: true
   },
+  reservations: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Reservations', // Reference to some EventSchema
+    required : true
+  }],
 
   password: {
     type: String,
@@ -28,9 +33,11 @@ avatar: {
     type: String,
     default: "https://res.cloudinary.com/it-engineering-factory/image/upload/v1654873543/mes%20outils/avatar_v8ixww.png"
     
-}
+},
+
 }, {
     timestamps: true
 })
 
 module.exports = mongoose.model("Users", userSchema) 
+

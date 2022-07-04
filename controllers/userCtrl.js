@@ -1,8 +1,12 @@
 const Users = require('../models/userModel')
+const Reservation = require('../models/reservation')
+
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const SendmailTransport = require('nodemailer/lib/sendmail-transport')
 const sendMail = require('./sendMail')
+
+
 
 const {CLIENT_URL} = process.env.CLIENT_URL
 const userCtrl = {
@@ -214,8 +218,11 @@ const userCtrl = {
       } catch (err) {
         return res.status(500).json({msg: err.message})
       }
-    }
-
+    },
+    
+    
+    
+  
   }
 
 

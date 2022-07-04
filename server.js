@@ -5,6 +5,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload')
 
+
 const app = express()
 app.use(express.json())
 app.use(cors())
@@ -16,13 +17,10 @@ app.use(fileUpload({
 // routes => /user/register
 
 app.use('/user', require('./routes/userRouter'))
+app.use('/api' , require('./routes/reservation'))
 
 
-
-// connect to mongodb
-const URI = process.env.MONGODB_URL 
-
-mongoose.connect(URI, {
+mongoose.connect('mongodb://localhost:27017', {
     // useCreateIndex: true, 
     // useFindAndModify: false,
     useNewUrlParser: true, 
@@ -31,6 +29,10 @@ mongoose.connect(URI, {
     if(err) throw err;
     console.log("connecté a mongo db")
 })
+
+
+
+
 
 
 const PORT = process.env.PORT || 5000
