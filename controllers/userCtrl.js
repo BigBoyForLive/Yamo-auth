@@ -35,7 +35,7 @@ const userCtrl = {
             const activation_token = createActivationToken(newUser)
             const url = `${CLIENT_URL}/user/activate/${activation_token}`
              
-            sendMail(email, url, "FINALISER L'INSCRIPTION")
+            sendMail(email, url, "FINALISER L'INSCRIPTION", "Work Et Yamo est un cadre de travail spacieux , aéré et climatisé a la portée de toutes les bourses , mettant ainsi à votre disposition plus de <b>6500</b> cours en ligne grace à notre connexion fibre optique")
             
             
 
@@ -237,7 +237,7 @@ const createActivationToken = (payload) => {
     return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET , {expiresIn:'5m'  })
   }
 const createAccessToken = (payload) => {
-    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET , {expiresIn:'15m'  })
+    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET , {expiresIn:'5m'  })
   }
 const createRefreshToken = (payload) => {
     return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET , {expiresIn:'7d'  })

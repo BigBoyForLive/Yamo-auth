@@ -26,7 +26,7 @@ const posteCtrl = ({
             });
 	        
             if (!nom || !classe) 
-            return res.status(400).json({msg : "veulleiz remplir toutes les cases"});
+            return res.status(400).json({msg : "veuillez remplir toutes les cases"});
              await newPost.save();
             return res.status(200).json({msg: "le poste a bien été créé"})
             

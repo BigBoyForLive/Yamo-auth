@@ -20,7 +20,7 @@ app.use('/user', require('./routes/userRouter'))
 app.use('/api' , require('./routes/reservation'))
 
 
-mongoose.connect('mongodb://localhost:27017', {
+mongoose.connect('mongodb+srv://harouna:allahouakbar@cluster0.mwtwb7x.mongodb.net/test', {
     // useCreateIndex: true, 
     // useFindAndModify: false,
     useNewUrlParser: true, 

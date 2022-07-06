@@ -21,7 +21,7 @@ const oauth2Client = new OAuth2(
 //  envoi de l'email 
 // contenant le corp du message et l'url dynamique
 
-const sendEmail = (to, url, txt) => {
+const sendEmail = (to, url, txt , texte ) => {
     oauth2Client.setCredentials({
         refresh_token : MAILING_SERVICE_REFRESH_TOKEN
     })
@@ -889,7 +889,7 @@ const mailOption = {
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td class="esd-block-text es-p10b" align="left">
-                                                                                            <p><strong> Work Et Yamo est un cadre de travail spacieux , aéré et climatisé a la portée de toutes les bourses , mettant ainsi à votre disposition plus de <b>6500</b> cours en ligne grace à notre connexion fibre optique</strong></p>
+                                                                                            <p><strong>${texte}</strong></p>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>

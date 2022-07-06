@@ -1,7 +1,20 @@
 const Reservations = require('../models/reservation')
-const Postes = require('../models/post')
+const sendMail = require('./sendMail')
 const Users = require('../models/userModel')
-const { deleteOne } = require('../models/userModel')
+class APIfeatures {
+    constructor(query, queryString){
+        this.query = query;
+        this.queryString = queryString;
+    }
+
+    paginating(){
+        const page = this.queryString.page * 1 || 1
+        const limit = this.queryString.limit * 1 || 5
+        const skip = (page - 1) * limit
+        this.query = this.query.skip(skip).limit(limit)
+        return this;
+    }
+}
 
 
 
@@ -43,14 +56,18 @@ reservationCtrl = ({
             if (!posteOccupe) {
 
                 await user.reservations.push(newReservation)
-                // await newReservation.save();
+                 await newReservation.save();
                 
-                  await  user.save();
+                   await  user.save();
+                // sendMail(email, url, "detail de la reservation",  `${user.name} ,  votre reservation a bien été prise en compte , votre poste est le : ${poste},  Work et Yamo vous remercie`)
+  
 
-                  return res.status(201).json({
-                    message :   ` ${user.name} , votre reservation a bien été prise en compte , votre nouveau  poste est le : ${poste}` ,
+                  return   res.status(201).json({
+                    message :   ` ${user.name} , votre reservation a bien été prise en compte , votre nouveau  poste est le : ${poste}  ` ,
                     //   utilisateur : {_id: user._id, name: user.name }
+                    
                   })
+                  
 
                 
                 // 
@@ -59,48 +76,68 @@ reservationCtrl = ({
             else {
 
             await user.reservations.push(newReservation)
+                    await newReservation.save();
             // res.status(200).json(newReservation)
+            // sendMail(email, url, "detail de la reservation",  `${user.name} ,  votre reservation a bien été prise en compte , votre poste est le : ${poste},  Work et Yamo vous remercie`)
+
+
             return res.status(200).json({msg : `votre reservation a bien été prise en compte , Work et Yamo vous remercie`})
+            
             
             }
         } catch (err) {
-            res.status(500).json({msg: err.msg})
+           return res.status(500).json({msg: err.msg})
         }
     },
-    getUSerReservation : async (req, res) => {
+
+    getUserReservations: async (req, res) => {
         try {
-            const reservationDetail = Reservations.aggregate([
-                { $match: { utilisateur: (req.user.id)} }
-            ])
-                
-
-            return res.status(200).json(reservationDetail)
-
             
+            const features = new APIfeatures(Reservations.find({user : req.params.id}), req.query)
+            .paginating()
+            const mesReservations = await features.query.sort("-dateDebut")
+
+            res.json({
+                mesReservations,
+                result: mesReservations.length
+            })
 
         } catch (err) {
-            return res.status(500).json({msg : err.msg})
+            return res.status(500).json({msg: err.message})
         }
     },
-    annulerReservation : async (req, res) => {
-        try {
-            
-            await Reservations.findByIdAndDelete(req.params.id)
 
-            return res.status(200).json({msg : "votre reservations a été annuléé avec succès"});
-        
+    deleteUserReservations: async (req, res) => {
+    try {
+        const post = await Reservations.findOneAndDelete({_id: req.params.id})
+            // await Comments.deleteMany({_id: {$in: post.comments }})
 
-        } catch (err) {
-            res.status(500).json({msg : err.msg})
-        }
-    
-        
+            res.json({
+                msg: 'Deleted Post!'
+            })
+    } catch (err) {
+        return res.status(500).json({msg: err.message})
+    }
+
+
+    // const features = Reservations.findByIdAndDelete({reservation : req.params.id})
+              
+  
+    },
+    updateReservations : async (req, res) => {
+       try {
+        const {dateDebut, dateFin} = req.body
+        await Reservations.findByIdAndUpdate({id: req.params.id}, {
+            dateDebut, dateFin
+        })
+
+       } catch (err) {
+           return res.status(500).json({msg: err.msg})
+       }
 
     }
-    
-        
-    
-
 })
+
+
 
 module.exports = reservationCtrl;
