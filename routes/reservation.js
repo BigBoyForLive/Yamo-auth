@@ -7,7 +7,7 @@ router.get('/reservation', authAdmin  , reservationCtrl.getAllReservation)
 
 router.post('/nouvelle', auth, reservationCtrl.postReservation)
 
-router.get('/liste/:id', auth,  reservationCtrl.getUserReservations)
+router.get('/liste', auth,  reservationCtrl.getUserReservations)
 
 router.delete('/supprimer/:id', auth,  reservationCtrl.deleteUserReservations)
 

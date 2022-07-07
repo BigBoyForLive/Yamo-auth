@@ -1,6 +1,8 @@
 const Reservations = require('../models/reservation')
 const sendMail = require('./sendMail')
 const Users = require('../models/userModel')
+const SendmailTransport = require('nodemailer/lib/sendmail-transport')
+
 class APIfeatures {
     constructor(query, queryString){
         this.query = query;
@@ -56,11 +58,14 @@ reservationCtrl = ({
             if (!posteOccupe) {
 
                 await user.reservations.push(newReservation)
+                const {email} = req.body
+                 sendMail(email, url, "detail de la reservation",  `${user.name} ,  votre reservation a bien été prise en compte , votre poste est le : ${poste},  Work et Yamo vous remercie`)
+
                  await newReservation.save();
                 
                    await  user.save();
-                // sendMail(email, url, "detail de la reservation",  `${user.name} ,  votre reservation a bien été prise en compte , votre poste est le : ${poste},  Work et Yamo vous remercie`)
-  
+                //    const url = `${CLIENT_URL}/api/liste/:id`
+                            
 
                   return   res.status(201).json({
                     message :   ` ${user.name} , votre reservation a bien été prise en compte , votre nouveau  poste est le : ${poste}  ` ,
@@ -81,7 +86,7 @@ reservationCtrl = ({
             // sendMail(email, url, "detail de la reservation",  `${user.name} ,  votre reservation a bien été prise en compte , votre poste est le : ${poste},  Work et Yamo vous remercie`)
 
 
-            return res.status(200).json({msg : `votre reservation a bien été prise en compte , Work et Yamo vous remercie`})
+            return res.status(200).json({msg : `votre reservation a bien été prise en compte  sur le ${poste}, Work et Yamo vous remercie`})
             
             
             }
@@ -92,8 +97,8 @@ reservationCtrl = ({
 
     getUserReservations: async (req, res) => {
         try {
-            
-            const features = new APIfeatures(Reservations.find({user : req.params.id}), req.query)
+            const user = await (req.user.id) //req.params.id
+            const features = new APIfeatures(Reservations.find({utilisateur : user }), req.query)
             .paginating()
             const mesReservations = await features.query.sort("-dateDebut")
 

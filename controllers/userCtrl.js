@@ -10,6 +10,7 @@ const sendMail = require('./sendMail')
 
 const {CLIENT_URL} = process.env.CLIENT_URL
 const userCtrl = {
+   
     register: async (req, res) => {
         try{
             const {name, email, password} = req.body
