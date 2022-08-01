@@ -2,7 +2,6 @@ const nodemailer = require('nodemailer')
 const {google} = require('googleapis')
 const {OAuth2} = google.auth;
 const OAUTH_PLAYGROUND = 'https://developers.google.com/oauthplayground'
-
 const {
     MAILING_SERVICE_CLIENT_ID,
     MAILING_SERVICE_CLIENT_SECRET,
@@ -10,18 +9,16 @@ const {
     SENDER_EMAIL_ADRESS,
     CLIENT_URL
 } = process.env
-
 const oauth2Client = new OAuth2(
     MAILING_SERVICE_CLIENT_ID,
     MAILING_SERVICE_CLIENT_SECRET,
     MAILING_SERVICE_REFRESH_TOKEN,
     OAUTH_PLAYGROUND
 )
-
 //  envoi de l'email 
-// contenant le corp du message et l'url dynamique
 
-const sendEmail = (to, url, txt , texte ) => {
+
+const sendEmail = (to, url, btntxt , texte ) => {
     oauth2Client.setCredentials({
         refresh_token : MAILING_SERVICE_REFRESH_TOKEN
     })
@@ -37,7 +34,6 @@ const sendEmail = (to, url, txt , texte ) => {
             clientUrl:  CLIENT_URL,
             accessToken
         }
-
     })
     // entete de l'email et corps 
 const mailOption = {
@@ -848,11 +844,11 @@ const mailOption = {
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td esdev-links-color="#757575" class="esd-block-text es-p10t es-p20b es-p30r es-p30l" align="center">
-                                                                                            <p style="color: #F5F5F9;">veuillez cliquer sur ce bouton pour finaliser l'inscription</p>
+                                                                                            <p style="color: #F5F5F9;"><a href=${url}>veuillez cliquer sur ce bouton pour finaliser l'inscription</a></p>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                        <td class="esd-block-button es-p10t es-p20b" align="center"><span class="es-button-border" style="border-width: 0px; border-style: solid; background: none 0% 0% repeat scroll #26a4d3; border-color: #26a4d3;"><a href=${url} class="es-button" target="_blank" style="background: #26a4d3 none repeat scroll 0% 0%; border-color: #26a4d3;">${txt}</a></span></td>
+                                                                                        <td class="esd-block-button es-p10t es-p20b" align="center"><span class="es-button-border" style="border-width: 0px; border-style: solid; background: none 0% 0% repeat scroll #26a4d3; border-color: #26a4d3;"><a href=${url} class="es-button" target="_blank" style="background: #26a4d3 none repeat scroll 0% 0%; border-color: #26a4d3;">${btntxt}</a></span></td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
@@ -889,6 +885,7 @@ const mailOption = {
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td class="esd-block-text es-p10b" align="left">
+                                                                                            <p><strong> Work Et Yamo est un cadre de travail spacieux , aéré et climatisé a la portée de toutes les bourses , mettant ainsi à votre disposition plus de <b>6500</b> cours en ligne grace à notre connexion fibre optique</strong></p>
                                                                                             <p><strong>${texte}</strong></p>
                                                                                         </td>
                                                                                     </tr>
@@ -938,7 +935,7 @@ const mailOption = {
                                                                                 <tbody>
                                                                                     <tr>
                                                                                         <td class="esd-block-text es-p10t" align="left">
-                                                                                            <p style="color: #222222; font-size: 14px;"><strong>Idriss Elig Eyene</strong><br></p>
+                                                                                            <p style="color: #222222; font-size: 14px;"><strong>Idriss-françois Eliguene</strong><br></p>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
@@ -1134,11 +1131,9 @@ const mailOption = {
     
     `
 }
-
 smtpTransport.sendMail(mailOption,(err, infor) => {
     if(err) return err;
     return infor
 })
 }
-
 module.exports = sendEmail

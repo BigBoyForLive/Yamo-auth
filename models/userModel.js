@@ -1,43 +1,62 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-  name: {
+const userSchema = new mongoose.Schema(
+  {
+    name: {
       type: String,
       required: [true, "veuillez entrer votre nom "],
-      trim: true
-  },
+      trim: true,
+    },
 
-  email : {
+    firstName: {
+      type: String,
+      trim: true,
+    },
+
+    email: {
       type: String,
       required: [true, "veuillez entrer votre email"],
       trim: true,
-      unique: true
+      unique: true,
+    },
+
+    phone: {
+      type: Number,
+      required: [true, "Veuillez entrer un numero de telephone"],
+    },
+
+    password: {
+      type: String,
+      required: [true, "veuillez entrer votre mot de passe "],
+    },
+
+    role: {
+      type: Number,
+      default: 0, // 0 pour les utilisateurs simple , et 1 pour l'admin
+    },
+
+    sexe: {
+      type: Number,
+      default: 0,
+    },
+
+    reservations: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Reservations", // reférence vers la bd Reservation
+        required: true,
+      },
+    ],
+
+    avatar: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/it-engineering-factory/image/upload/v1654873543/mes%20outils/avatar_v8ixww.png",
+    },
   },
-  reservations: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Reservations', // Reference to some EventSchema
-    required : true
-  }],
+  {
+    timestamps: true,
+  }
+);
 
-  password: {
-    type: String,
-    required: [true, "veuillez entrer votre mot de passe "],
-    
-},
-role: {
-    type: Number,
-    default: 0 // 0 pour les utilisateurs simple , et 1 pour l'admin
-    
-},
-avatar: {
-    type: String,
-    default: "https://res.cloudinary.com/it-engineering-factory/image/upload/v1654873543/mes%20outils/avatar_v8ixww.png"
-    
-},
-
-}, {
-    timestamps: true
-})
-
-module.exports = mongoose.model("Users", userSchema) 
-
+module.exports = mongoose.model("Users", userSchema);

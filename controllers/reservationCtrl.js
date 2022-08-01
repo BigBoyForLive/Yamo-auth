@@ -23,6 +23,7 @@ class APIfeatures {
 reservationCtrl = ({
     getAllReservation : async (req, res) => {
         const reservation = await Reservations.find({})
+        const user = await Users.findById(req.user.id).select('-password')
         try {
             if (reservation) 
             return res.status(200).json(reservation);
@@ -36,6 +37,8 @@ reservationCtrl = ({
     postReservation : async (req, res) => {
         const {date, abonnement  } = req.body
         const utilisateur = await (req.user.id)
+        const nom = await (req.user.name)
+
         const postes = ["poste 1", "poste 2", "poste 3", "poste 4", "poste 5", "poste 6", "poste 7", "poste 8" , "poste 9", "poste 10", "poste 11", "poste 12", "poste 13", "poste 14", "poste 15", "poste 16", "poste 17", "poste 18", "poste 19", "poste 20", "poste 21", "poste 22", "poste 23", "poste 24", "poste 25" ]
         
 
@@ -47,7 +50,8 @@ reservationCtrl = ({
                 date,
                 abonnement,
                 poste,
-                utilisateur
+                utilisateur,
+                nom
             })
             
             const user = await Users.findById(utilisateur)
@@ -59,7 +63,7 @@ reservationCtrl = ({
 
                 await user.reservations.push(newReservation)
                 const {email} = req.body
-                 sendMail(email, url, "detail de la reservation",  `${user.name} ,  votre reservation a bien été prise en compte , votre poste est le : ${poste},  Work et Yamo vous remercie`)
+                //  sendMail(email, url, "detail de la reservation",  `${user.name} ,  votre reservation a bien été prise en compte , votre poste est le : ${poste},  Work et Yamo vous remercie`)
 
                  await newReservation.save();
                 
@@ -118,7 +122,7 @@ reservationCtrl = ({
             // await Comments.deleteMany({_id: {$in: post.comments }})
 
             res.json({
-                msg: 'Deleted Post!'
+                msg: 'Deleted reservation'
             })
     } catch (err) {
         return res.status(500).json({msg: err.message})
