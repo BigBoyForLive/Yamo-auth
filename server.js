@@ -5,12 +5,14 @@ const cors = require("cors");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
+const helmet = require('helmet');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 app.use(cookieParser());
+app.use(helmet());
 app.use(
   fileUpload({
     useTempFiles: true,
