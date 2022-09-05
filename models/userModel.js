@@ -47,6 +47,18 @@ const userSchema = new mongoose.Schema(
         required: true,
       },
     ],
+    abonnements: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Abonnements", // reférence vers la bd Reservation
+        required: true,
+      },
+    ],
+
+    ambassador : {
+      type : Number,
+      default : 0  // 0 for non-ambassador , 1 for ambassador , 2 for high - level ambassador
+    },
 
     avatar: {
       type: String,

@@ -7,7 +7,7 @@ try {
       
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err)  return res.status(400).json({msg : "Authentification Invalide"})
-
+           
         req.user = user
         next()
     })

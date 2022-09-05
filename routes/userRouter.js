@@ -3,28 +3,31 @@ const userCtrl = require("../controllers/userCtrl");
 const auth = require("../middleware/auth");
 const authAdmin = require("../middleware/authAdmin");
 
-router.post("/register", userCtrl.register);
+router.post("/register",   userCtrl.register);
 
-router.post("/activation", userCtrl.activateEmail);
+router.post("/activation",   userCtrl.activateEmail);
 
-router.post("/login", userCtrl.login);
+router.post("/login",  userCtrl.login);
 
-router.post("/refresh_token", userCtrl.getAccessToken);
+router.post("/refresh_token",   userCtrl.getAccessToken);
 
-router.post("/forgot", userCtrl.forgotPassword);
+router.post("/forgot",   userCtrl.forgotPassword);
 
-router.post("/reset", auth, userCtrl.resetPassword);
+router.post("/reset",  auth,  userCtrl.resetPassword); //* auth,
 
-router.post("/infor", auth, userCtrl.getUserInfor);
+router.get("/infor",   auth, userCtrl.getUserInfor); 
 
-router.get("/all_infor", auth, authAdmin, userCtrl.getUsersAllInfor);
+router.get("/all_infor",   authAdmin,  userCtrl.getUsersAllInfor); //* auth,
 
-router.get("/logout", userCtrl.logout);
+router.get("/logout",  auth, userCtrl.logout); //* auth,
 
-router.patch("/update", auth, userCtrl.updateUser);
+router.patch("/update",   auth, userCtrl.updateUser); //* auth,
 
-router.patch("/update_role/:id", auth, authAdmin, userCtrl.updateUsersRole);
+router.patch("/update_role/:id",   authAdmin, userCtrl.updateUsersRole); //* auth,
 
-router.delete("/delete/:id", auth, authAdmin, userCtrl.deleteUser);
+router.patch("/ambassador", auth, userCtrl.UserAmbassador); //* auth,
 
-module.exports = router;
+
+router.delete("/delete/:id",  authAdmin, userCtrl.deleteUser); //* auth,
+
+module.exports = router; 

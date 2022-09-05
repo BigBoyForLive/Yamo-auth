@@ -6,8 +6,6 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 
-
-
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -19,18 +17,16 @@ app.use(
   })
 );
 
-
-
 app.use("/user", require("./routes/userRouter"));
 app.use("/api", require("./routes/reservation"));
 app.use("/poste", require("./routes/poste"));
+app.use("/abonnement", require("./routes/abonnement"));
 
-const URI = process.env.MONGODB_URL 
+const URI = process.env.MONGODB_URL;
 
 mongoose.connect(
-  URI,
+  "mongodb://localhost:27017/yamo",
   {
-    
     useNewUrlParser: true,
     useUnifiedTopology: true,
   },

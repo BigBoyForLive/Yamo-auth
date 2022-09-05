@@ -4,9 +4,10 @@ const Users = require("../models/userModel");
 const Reservation = require("../models/reservation");
 const SendmailTransport = require("nodemailer/lib/sendmail-transport");
 const sendMail = require("./sendMail");
+const otpGenerator = require('otp-generator')
 
 const CLIENT_URL = process.env.CLIENT_URL;
-
+const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
 const userCtrl = {
   register: async (req, res) => {
     try {
@@ -41,17 +42,17 @@ const userCtrl = {
 
       const activation_token = createActivationToken(newUser);
       // const url = `http://localhost:3000/user/activate/${activation_token}`
-
-      sendMail(
-        email,
-        `http://localhost:3000/user/activate/${activation_token}`,
-        "FINALISER L'INSCRIPTION",
-        "Work Et Yamo est un cadre de travail spacieux , aéré et climatisé a la portée de toutes les bourses , mettant ainsi à votre disposition plus de <b>6500</b> cours en ligne grace à notre connexion fibre optique"
-      );
+     
+      // sendMail(
+      //   email,
+      //   `http://localhost:3000/user/activate/${activation_token}`, // add the link of the app 
+      //   `FINALISER L'INSCRIPTION`,
+      //   " Work Et Yamo est un cadre de travail spacieux , aéré et climatisé a la portée de toutes les bourses , mettant ainsi à votre disposition plus de <b>6500</b> cours en ligne grace à notre connexion fibre optique"
+      // );
 
       console.log({ activation_token });
 
-      res.json({ msg: "Inscription reussie , veuillez activer votre email" });
+      res.json({ "activation_token": activation_token});
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -59,13 +60,13 @@ const userCtrl = {
   activateEmail: async (req, res) => {
     try {
       const { activation_token } = req.body;
-      const user = jwt.verify(
+      const user =  jwt.verify(
         activation_token,
         process.env.ACTIVATION_TOKEN_SECRET
       );
-
+    
       console.log(user);
-      const { name, email, password } = user;
+      const { name, email, password, phone } = user;
       const check = await Users.findOne({ email });
       if (check) return res.status(400).json({ msg: "cet email existe deja " });
 
@@ -73,6 +74,7 @@ const userCtrl = {
         name,
         email,
         password,
+        phone
       });
 
       await newUser.save();
@@ -103,7 +105,7 @@ const userCtrl = {
         maxAge: 7 * 24 * 60 * 60 * 1000, // valable 7jours
       });
 
-      res.json({ msg: "connexion reussie" });
+      res.json({"access_token" : refresh_token});
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -118,7 +120,7 @@ const userCtrl = {
         if (err) res.status(400).json({ msg: "veuillez vous connecter" });
 
         const access_token = createAccessToken({ id: user.id });
-        res.json({ access_token });
+      res.json(access_token);
       });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -219,6 +221,22 @@ const userCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  UserAmbassador: async (req, res) => {
+    try {
+      const { ambassador } = req.body;
+      await Users.findByIdAndUpdate(
+        { _id: req.user.id },
+        {
+          ambassador,
+        }
+      );
+
+      res.json({ msg: "Vous etes désormais ambassadeur" });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
   deleteUser: async (req, res) => {
     try {
       await Users.findByIdAndDelete(req.params.id);
@@ -243,12 +261,12 @@ const createActivationToken = (payload) => {
 };
 const createAccessToken = (payload) => {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "10m",
-  });
+    expiresIn: "15m",
+  }); // a modifier avant le deploiement 
 };
 const createRefreshToken = (payload) => {
   return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "7d",
+    expiresIn: "60d",
   });
 };
 
