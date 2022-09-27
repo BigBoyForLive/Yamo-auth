@@ -31,6 +31,20 @@ reservationCtrl = {
       return res.status(500).json({ msg: err.msg });
     }
   },
+
+  getScannedReservation: async (req, res) => {
+    const reservation = await Reservations.find({scaned : true});
+    const user = await Users.findById(req.user.id).select("-password");
+    try {
+      if (reservation) return res.status(200).json(reservation);
+      return res
+        .status(400)
+        .json( "pas de nouvelles reservations pour le moment" );
+    } catch (err) {
+      return res.status(500).json({ msg: err.msg });
+    }
+  },
+  
   postReservation: async (req, res) => {
     const { date, Heure, NbHeure } = req.body;
 
@@ -124,21 +138,41 @@ reservationCtrl = {
 
   deleteUserReservations: async (req, res) => {
     try {
-      const post = await Reservations.findOneAndDelete({ _id: req.params.id });
-      await Comments.deleteMany({_id: {$in: post.comments }})
-
+      
+      await Reservations.findByIdAndDelete(req.params.id)
+      
       res.json({
         msg: "Deleted reservation",
       });
     } catch (err) {
-      return res.status(500).json({ msg: err.message });
+      return res.status(500).json({ msg: "erreur" });
     }
 
     
   },
+  AdminReservations: async (req, res) => {
+    try {
+      const {scaned } = req.body;
+      // await Reservations.findByIdAndUpdate(req.params.id)
+      await Reservations.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          scaned
+        }
+      );
+     res.json({
+        msg: "Update Successfully",
+      });
+    } catch (err) {
+      return res.status(500).json({ msg: err.msg });
+    }
+  },
+  // if(scan === true) {
   updateReservations: async (req, res) => {
     try {
-      const { dateDebut, dateFin } = req.body;
+      const { date,
+        Heure,
+        NbHeure } = req.body;
       await Reservations.findByIdAndUpdate(
         { id: req.params.id },
         {

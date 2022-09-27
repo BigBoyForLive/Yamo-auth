@@ -4,17 +4,18 @@ const Poste = {
     createPost : async (req, res) => {
         try {
             const {
-                title,
-                link,
+                // title,
+                // link,
                 description
             } = req.body;
-            if(!title || ! link || ! description) {
+            if(! description) {
                 return res.status(400).json({msg: "veuillez remplir toutes les cases s'il vous plait"})
+                console.log("not description")
             }
             else {
                 const newPost = new Postes ({
-                title,
-                link,
+                // title,
+                // link,
                 description
                 })
     

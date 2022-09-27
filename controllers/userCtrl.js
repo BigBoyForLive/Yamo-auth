@@ -181,6 +181,17 @@ const userCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  getAdmin :  async (req, res) => {
+    try {
+      const users = await Users.find({role :{ $eq: 1 }})
+      
+      res.json(users);
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
   logout: async (req, res) => {
     try {
       res.clearCookie("refreshtoken", { path: "user/refresh_token" });
@@ -256,12 +267,12 @@ const validateEmail = (email) => {
 
 const createActivationToken = (payload) => {
   return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, {
-    expiresIn: "10m",
+    expiresIn: "60d",
   });
 };
 const createAccessToken = (payload) => {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "60d",
   }); // a modifier avant le deploiement 
 };
 const createRefreshToken = (payload) => {

@@ -5,6 +5,8 @@ const authAdmin = require("../middleware/authAdmin");
 
 router.post("/register",   userCtrl.register);
 
+router.get("/admin",   auth, userCtrl.getAdmin); 
+
 router.post("/activation",   userCtrl.activateEmail);
 
 router.post("/login",  userCtrl.login);
@@ -17,7 +19,7 @@ router.post("/reset",  auth,  userCtrl.resetPassword); //* auth,
 
 router.get("/infor",   auth, userCtrl.getUserInfor); 
 
-router.get("/all_infor",   authAdmin,  userCtrl.getUsersAllInfor); //* auth,
+router.get("/all_infor",   auth,  userCtrl.getUsersAllInfor); //* auth,
 
 router.get("/logout",  auth, userCtrl.logout); //* auth,
 

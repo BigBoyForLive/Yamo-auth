@@ -22,6 +22,7 @@ const abonnementModel = new mongoose.Schema(
       default : 5,
     },
 
+   
     duree: {
       type: Number,
       default : 5,

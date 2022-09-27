@@ -10,7 +10,11 @@ const reservationModel = new mongoose.Schema(
     //   type: mongoose.Schema.Types.ObjectId,
     //   ref: "Abonnement",
     // },
-
+    scaned: {
+      type : Boolean,
+      default : false
+      },
+      
     date: {
       type: Date,
       default: Date.now("dd-yyyy-MM"),
