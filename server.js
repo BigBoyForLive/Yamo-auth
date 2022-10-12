@@ -27,7 +27,7 @@ app.use("/abonnement", require("./routes/abonnement"));
 const URI = process.env.MONGODB_URL;
 
 mongoose.connect(
-  "mongodb://localhost:27017/yamo",
+  "mongodb+srv://harouna:allahouakbar@cluster0.sgbrcie.mongodb.net/?retryWrites=true&w=majority",
   
   {
     useNewUrlParser: true,

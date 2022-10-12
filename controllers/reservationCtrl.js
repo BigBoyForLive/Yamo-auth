@@ -174,13 +174,15 @@ reservationCtrl = {
         Heure,
         NbHeure } = req.body;
       await Reservations.findByIdAndUpdate(
-        { id: req.params.id },
+        { _id: req.params.id },
         {
           date,
           Heure,
           NbHeure
         }
       );
+
+      return res.status(200).json({"msg":"modifier avec succes"})
     } catch (err) {
       return res.status(500).json({ msg: err.msg });
     }

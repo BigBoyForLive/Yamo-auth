@@ -3,7 +3,10 @@ const userCtrl = require("../controllers/userCtrl");
 const auth = require("../middleware/auth");
 const authAdmin = require("../middleware/authAdmin");
 
+
 router.post("/register",   userCtrl.register);
+
+// router.post("/otp",   userCtrl.registerByOtp);
 
 router.get("/admin",   auth, userCtrl.getAdmin); 
 

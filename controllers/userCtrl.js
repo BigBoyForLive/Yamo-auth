@@ -4,7 +4,8 @@ const Users = require("../models/userModel");
 const Reservation = require("../models/reservation");
 const SendmailTransport = require("nodemailer/lib/sendmail-transport");
 const sendMail = require("./sendMail");
-const otpGenerator = require('otp-generator')
+const otpGenerator = require('otp-generator');
+const userOtpVerification = require("../models/userOtpVerification");
 
 const CLIENT_URL = process.env.CLIENT_URL;
 const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
@@ -41,7 +42,7 @@ const userCtrl = {
       };
 
       const activation_token = createActivationToken(newUser);
-      // const url = `http://localhost:3000/user/activate/${activation_token}`
+      const url = `http://localhost:3000/user/activate/${activation_token}`
      
       // sendMail(
       //   email,
@@ -57,6 +58,48 @@ const userCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  // registerByOtp: async (req, res) => {
+  //   try {
+  //     const { name, email, password, phone } = req.body;
+  //     if (!name || !email || !password || !phone)
+  //       return res
+  //         .status(400)
+  //         .json({ msg: "veuilez remplir toutes les case " });
+
+  //     if (!validateEmail(email))
+  //       return res.status(400).json({ msg: "l'email saisi n'est pas valide" });
+
+  //     const user = await Users.findOne({ email });
+  //     if (user)
+  //       return res.status(400).json({ msg: "cet email est est déjà pris " });
+
+  //     if (password.length < 6)
+  //       return res
+  //         .status(400)
+  //         .json({
+  //           msg: "le mot de passe doit contenir au moins 6 charactères",
+  //         });
+
+  //     const passwordHash = await bcrypt.hash(password, 12);
+
+  //     const newUser = {
+  //       name,
+  //       email,
+  //       password: passwordHash,
+  //       phone,
+  //       verified: false
+  //     };
+
+  //     SendOtpVerificationEmail()
+
+  //     // res.json({ "activation_token": activation_token});
+  //   } catch (err) {
+  //     return res.status(500).json({ msg: err.message });
+  //   }
+  // },
+
+
   activateEmail: async (req, res) => {
     try {
       const { activation_token } = req.body;
@@ -74,7 +117,9 @@ const userCtrl = {
         name,
         email,
         password,
-        phone
+        phone,
+        verified: false
+
       });
 
       await newUser.save();
@@ -223,7 +268,7 @@ const userCtrl = {
       await Users.findByIdAndUpdate(
         { _id: req.params.user.id },
         {
-          role,
+          role : role,
         }
       );
 
@@ -258,6 +303,48 @@ const userCtrl = {
     }
   },
 };
+
+// const SendOtpVerificationEmail = async () => {
+//   try {
+//  const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+// //  sendMail(
+// //   email,
+// //   `http://localhost:3000/user/activate/${activation_token}`, // add the link of the app 
+// //   `FINALISER L'INSCRIPTION`,
+// //    ` <h1> CODE : ${otp} </h1>Work Et Yamo est un cadre de travail spacieux ,  aéré et climatisé a la portée de toutes les bourses , mettant ainsi à votre disposition plus de <b>6500</b> cours en ligne grace à notre connexion fibre optique`
+// // );
+// const saltRound = 10
+// const hashedOTP = await bcrypt.hash(otp, saltRound) ;
+//  const newOTPVerification = new UserOtpVerification({
+//   userId : user._id,
+//   otp : hashedOTP,
+//   createdAt : Date.now(),
+//   expiresAt : Date.now() + 3600000
+// })
+// await newOTPVerification.save()
+// await sendMail(
+//   email,
+//   `http://localhost:3000/user/activate/${activation_token}`, // add the link of the app 
+//   `FINALISER L'INSCRIPTION`,
+//    ` <h1> CODE : ${otp} </h1>Work Et Yamo est un cadre de travail spacieux ,  aéré et climatisé a la portée de toutes les bourses , mettant ainsi à votre disposition plus de <b>6500</b> cours en ligne grace à notre connexion fibre optique`
+// );
+// res.json({
+//   status : "pending",
+//   message : "otp email sent ",
+//   data : {
+//     userId: _id,
+//     email
+//   }
+// })
+
+//   }
+//   catch(error) {
+// res.json({
+//   staus : "Failed",
+//   message : error.message
+// })
+//   }
+// }
 
 const validateEmail = (email) => {
   return email.match(

@@ -20,7 +20,7 @@ class APIfeatures {
 
 abonnementCtrl = {
   getAllAbonnement: async (req, res) => {
-    const abonnement = await Abonnements.find({});
+    const abonnement = await Abonnements.find();
     try {
       if (abonnement) return res.status(200).json(abonnement);
       return res
@@ -76,7 +76,6 @@ abonnementCtrl = {
       await user.save();
 
           await newAbonnement.save();
-          
           return res.status(201).json({
             message: "ajouter avec succes",
           });

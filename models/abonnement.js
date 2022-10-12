@@ -26,15 +26,7 @@ const abonnementModel = new mongoose.Schema(
     duree: {
       type: Number,
       default : 5,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-      index: { expires:  60 },
-    }, // efface automatiquement de la db apres 10jours
-  },
-  {
-    timestamps: true,
+    }
   }
 );
 

@@ -20,7 +20,7 @@ const Poste = {
                 })
     
                 await newPost.save()
-                res.status(201).json({msg : "votre poste a bien été pris en compte "})
+                res.status(201).json({msg : "votre remarque a bien été pris en compte "})
             }
 
 

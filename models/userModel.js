@@ -60,6 +60,10 @@ const userSchema = new mongoose.Schema(
       default : 0  // 0 for non-ambassador , 1 for ambassador , 2 for high - level ambassador
     },
 
+    verified : {
+      type: String
+    },
+
     avatar: {
       type: String,
       default:
